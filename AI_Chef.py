@@ -2,7 +2,7 @@
 # Class: CS 361 - Software Engineering I
 # Author: Mallory Huston
 # Description: An artificially intelligent chef that cooks any available recipe you want
-#              
+#              that runs via a command prompt interface.
 
 import json
 from pathlib import Path
@@ -168,7 +168,7 @@ def account(name, pwd):
         account_input = input("Welcome to your AI Chef account! Please enter the number of an option below:"
                               "\n1. View your recipes"
                               "\n2. Create new recipe - customizable in just two steps!"
-                              "\n3. Edit/delete your recipes"
+                              "\n3. Delete your recipes"
                               "\n4. Logoff"
                               "\n5. Help options"
                               "\n-> ")
@@ -208,8 +208,16 @@ def account(name, pwd):
 
             # do nothing
             elif finalize.lower() == "n":
-                print("Understood. Recipe has not been saved, but feel free to come back anytime!")
-                continue
+                print("Understood. No hard feelings!")
+                confirmation = input("\nWould you still like me to save this recipe for you anyway? Y/N: ")
+
+                if confirmation.lower() == "y":
+                    print("Recipe saved!")
+                    user.add_recipe(meal, request)
+
+                if confirmation.lower() == "n":
+                    print("Recipe not saved.")
+                    continue
 
             else:
                 print("Invalid entry. Returning to account.")
