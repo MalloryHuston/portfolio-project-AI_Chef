@@ -209,7 +209,7 @@ def account(name, pwd):
             # do nothing
             elif finalize.lower() == "n":
                 print("Understood. No hard feelings!")
-                confirmation = input("\nWould you still like me to save this recipe for you anyway? Warning: any unsaved changes will be lost. Y/N: ")
+                confirmation = input("\nWould you still like me to save this recipe for you anyway? WARNING: Any unsaved changes will be lost. Y/N: ")
 
                 if confirmation.lower() == "y":
                     print("Recipe saved!")
