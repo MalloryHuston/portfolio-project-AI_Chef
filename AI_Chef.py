@@ -195,7 +195,7 @@ def account(name, pwd):
         elif account_input == "2":
             # prompt user for meal and request
             meal = input("\nPlease enter text for a simple recipe you love eating: ")
-            request = input("Sounds like a delicious meal! Let me process making {meal} real quick...")
+            request = input("Sounds like a delicious meal! Let me process making {meal} real quick. Press any key to continue...")
 
             # confirm recipe
             print("\nYou have entered front: " + meal + "\nAnd back: " + request)
