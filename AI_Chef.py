@@ -68,8 +68,13 @@ class User:
             print("\nShowing recipe #" + str(i) + ".")
             print("Meal: " + meal)
             input("Press any key to see request from the AI...")
-            print("Request: " + request)
-            input("Press any key to see next recipe...")
+            makingsure = input("\nWould you like me to make {meal} for you tonight? Y/N")
+
+            if makingsure.lower() == "y":
+                print("Alright! Good choice! Here is your delicious {meal}!")
+                
+            if makingsure.lower() == "n":
+                input("That is alright. Press any key to see next recipe...")
 
             i += 1
 
@@ -227,7 +232,7 @@ def account(name, pwd):
             # confirm choice to delete
             delete = input("Delete your recipe(s)? Y/N: ")
 
-            # delete all recipes in user object and hold recipe file associated with user credentials
+            # delete all recipes in user object and hdd recipe file associated with user credentials
             if delete.lower() == "y":
                 print("Recipes deleted!")
                 user.delete()
