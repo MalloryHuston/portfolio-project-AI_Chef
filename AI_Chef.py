@@ -1,4 +1,4 @@
-# Title: AI Chef Search Engine
+# Title: AI Chef User Directory
 # Class: CS 361 - Software Engineering I
 # Author: Mallory Huston
 # Description: An artificially intelligent chef that cooks any available recipe you want
