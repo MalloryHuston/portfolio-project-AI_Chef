@@ -51,7 +51,7 @@ class User:
         """prints a numbered list of recipes"""
         i = 1
         # print list
-        for meal, request in sorted(self._data.items()):
+        for meal in sorted(self._data.items()):
             print(str(i) + ". " + meal)
 
             # screen break every 10 recipes
@@ -198,7 +198,7 @@ def account(name, pwd):
             request = input("Sounds like a delicious meal! Let me process making {meal} real quick. Press any key to continue...")
 
             # confirm recipe
-            print("\nYou have entered front: " + meal + "\nAnd back: " + request)
+            print("\nYou have entered front: " + meal )
             finalize = input("\nWould you like me to make this {meal} for you tonight? Y/N: ")
 
             # save recipe
