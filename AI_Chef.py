@@ -198,7 +198,7 @@ def account(name, pwd):
             request = input("Sounds like a delicious meal! Let me process making {meal} real quick. Press any key to continue...")
 
             # confirm recipe
-            print("\nYou have entered front: " + meal )
+            print("\nYou have entered the following meal: " + meal )
             finalize = input("\nWould you like me to make this {meal} for you tonight? Y/N: ")
 
             # save recipe
