@@ -1,3 +1,3 @@
-Wikipedia Scraper for Game Development Guide Microservice
-CS 361
-Mallory Huston
+Wikipedia Scraper for Game Development Guide Microservice<br>
+CS 361<br>
+Mallory Huston<br>
