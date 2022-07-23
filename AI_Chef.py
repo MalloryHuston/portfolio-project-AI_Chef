@@ -98,6 +98,7 @@ class User:
             return True
         else:
             return False
+        
 
 def authenticate(name, pwd):
     """checks user name/pwd against existing credentials"""
