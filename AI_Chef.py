@@ -37,15 +37,42 @@ class User:
             with open(name + ".txt", 'w') as file:
                 file.write(json.dumps(self._cred))
 
-    def add_recipe(self, recipe, request):
-        """adds a recipe entry to user._data"""
+    def valid_index(self, pos):
+        """check if the given index falls within the dictionary"""
+        pos = int(pos) - 1
+        if 0 <= pos < len(self._data):
+            return True
+        else:
+            return False
+
+    def add_recipe(self, pos, recipe, request):
+        """adds a recipe entry to given collection in user._data"""
+        pos = int(pos) - 1
+
         # creates directory if no recipes
         if self._data == {}:
-            self._data = {recipe: request}
+            self._data = {list(self._data.keys())[pos]: {recipe: request}}
 
         # adds recipe to directory
         else:
-            self._data[recipe] = request
+            self._data[list(self._data.keys())[pos]][recipe] = request
+
+    def add_coll(self, coll):
+        """adds an empty collection to self._data"""
+        self._data[coll] = {}
+
+    def show_coll(self):
+        """prints a numbered list of all collections"""
+        i = 1
+        # print list
+        for meal, request in self._data.items():
+            print(str(i) + ". " + meal)
+
+            # screen break every 10 recipes
+            if i % 10 == 0:
+                input("\nPress any key to continue...\n")
+
+            i += 1
 
     def show_recipes(self):
         """prints a numbered list of recipes"""
@@ -68,18 +95,18 @@ class User:
             print("\nShowing recipe #" + str(i) + ".")
             print("Meal: " + meal)
             input("Press any key to see request from the AI...")
-            makingsure = input("\nWould you like me to make {meal} for you tonight? Y/N")
+            making_sure = input("\nWould you like me to make {meal} for you tonight? Y/N")
 
-            if makingsure.lower() == "y":
+            if making_sure.lower() == "y":
                 print("Alright! Good choice! Here is your delicious {meal}!")
                 
-            if makingsure.lower() == "n":
+            if making_sure.lower() == "n":
                 input("That is alright. Press any key to see next recipe...")
 
             i += 1
 
     def save_recipes(self):
-        """saves self.data contents as a json to same directory"""
+        """saves self._data contents as a json to same directory"""
         with open(self._name + '.json', 'w') as out_file:
             out_file.write(json.dumps(self._data))
 
@@ -101,7 +128,7 @@ class User:
         
 
 def authenticate(name, pwd):
-    """checks user name/pwd against existing credentials"""
+    """checks username/pwd against existing credentials"""
     # check if user credential txt file exists
     file = Path(name + ".txt")
     if file.is_file():
@@ -201,7 +228,8 @@ def account(name, pwd):
         elif account_input == "2":
             # prompt user for meal and request
             meal = input("\nPlease enter text for a simple recipe you love eating: ")
-            request = input("Sounds like a delicious meal! Let me process making {meal} real quick. Press any key to continue...")
+            request = input("Sounds like a delicious meal! Let me process making {meal} real quick. Press any key to "
+                            "continue...")
 
             # confirm recipe
             print("\nYou have entered the following meal: " + meal )
@@ -215,7 +243,8 @@ def account(name, pwd):
             # do nothing
             elif finalize.lower() == "n":
                 print("Understood. No hard feelings!")
-                confirmation = input("\nWould you still like me to save this recipe for you anyway? WARNING: Any unsaved changes will be lost. Y/N: ")
+                confirmation = input("\nWould you still like me to save this recipe for you anyway? WARNING: Any "
+                                     "unsaved changes will be lost. Y/N: ")
 
                 if confirmation.lower() == "y":
                     print("Recipe saved!")
@@ -276,9 +305,9 @@ def create_account():
         # display recipe
         if create_input == "1":
 
-            # prompt user for user name and password
+            # prompt user for username and password
             while True:
-                # get user name
+                # get username
                 user_name = input("\nEnter your new user name: ")
                 # check if credential file exists
                 cred_file = Path(user_name + ".txt")
