@@ -1,4 +1,4 @@
-# portfolio-project-AI_Chef
+# AI Chef Search Interface
 
 CS361 Portfolio Project - AI Chef
 
