@@ -17,7 +17,7 @@
 ### Built With
 
 * [Python](https://www.python.org)
-* [RabbitMQ](https://https://www.rabbitmq.com)
+* [RabbitMQ](https://www.rabbitmq.com)
 * [Tkinter](https://docs.python.org/3/library/tkinter.html)
 
 
