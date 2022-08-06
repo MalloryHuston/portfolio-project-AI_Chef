@@ -8,8 +8,8 @@ Microservice has been completed by <a href="https://github.com/Jacob-Heinrich/em
 
 <b>REQUIREMENTS:</b>
 
-<pre>
-<code>pip install pathlib
-<code>pip install pika
-<code>pip install email</code>
-</pre>
+```
+pip install pathlib
+pip install pika
+pip install email
+```
