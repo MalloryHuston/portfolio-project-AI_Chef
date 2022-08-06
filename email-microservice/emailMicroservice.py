@@ -66,8 +66,8 @@ def email():
             msg = EmailMessage()
             msg.set_content(bodyString)
             msg['Subject'] = subjectMessage.get()
-            msg['From'] = "heinrija@oregonstate.edu"
-            msg['To'] = "jacob.heinrich09@gmail.com"
+            msg['From'] = "hustonm@oregonstate.edu"
+            msg['To'] = "mallorylhuston@gmail.com"
 
             s = smtplib.SMTP('smtp.gmail.com',587)
             s.ehlo()
@@ -76,7 +76,7 @@ def email():
             # login for smtplib server (password is gmail app password SEE INFO = https://support.google.com/accounts/answer/185833?hl=en)
             s.login('CS361SoftwareEngineering@gmail.com','yoevauamcinrcxvs')
             # First argument is where the email is getting sent from. Second argument is where it is going
-            s.sendmail('CS361SoftwareEngineering','jacob.heinrich09@gmail.com',msg.as_string())
+            s.sendmail('CS361SoftwareEngineering','mallorylhuston@gmail.com',msg.as_string())
             s.quit()
             emailBody.delete(1.0,END)
             subjectMessage.delete(0, END)
