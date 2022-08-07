@@ -25,7 +25,7 @@ python AI_Chef.py
 cd email-microservice
 python emailMicroservice.py
 ```
-<h3>Terminal #3</h3>
+<h4>Terminal #3</h4>
 
 ```
 cd email-microservice
