@@ -1,11 +1,8 @@
-import pika,sys,os
-import ssl
+import pika
 from tkinter import *
-from tkinter import ttk
 from tkinter import messagebox
 import smtplib
 from email.message import EmailMessage
-
 
 
 def communication():
@@ -20,14 +17,16 @@ def communication():
 
     channel.queue_declare(queue='email')
 
-    def callback(ch,method,properties,body):
+    def callback(ch, method, properties, body):
         openEmail = body
-        if(str(body) == "b'yes'"):
+        if str(body) == "b'yes'":
             email()
 
+        print(" [x] Received %r" % body)
 
-    channel.basic_consume(queue='email',on_message_callback=callback,auto_ack = True)
+    channel.basic_consume(queue='email', on_message_callback=callback, auto_ack=True)
 
+    print(' [*] Waiting for messages. To exit press CTRL+C')
     channel.start_consuming()
 
 
@@ -35,15 +34,14 @@ def email():
     """
     Email GUI. Will open when message is received.
     Users must put in message content and subject content for message
-    to be send.
+    to be sent.
     """
     root = Tk()
     root.title("Email")
     root.geometry("900x450")
 
-    frame = Frame(root, height = 200, width = 900)
+    frame = Frame(root, height=200, width=900)
     frame.pack()
-
 
     def display_text():
         """
@@ -57,10 +55,10 @@ def email():
 
         bodyString = emailBody.get(1.0, END)
         if len(bodyString) == 1:
-            messagebox.showerror("Show Error","No Message Inputted")
+            messagebox.showerror("Show Error", "No Message Inputted")
 
         elif len(subjectMessage.get()) == 0:
-            messagebox.showerror("Show Error","No Subject Inputted")
+            messagebox.showerror("Show Error", "No Subject Inputted")
 
         else:
             msg = EmailMessage()
@@ -69,51 +67,46 @@ def email():
             msg['From'] = "hustonm@oregonstate.edu"
             msg['To'] = "mallorylhuston@gmail.com"
 
-            s = smtplib.SMTP('smtp.gmail.com',587)
+            s = smtplib.SMTP('smtp.gmail.com', 587)
             s.ehlo()
             s.starttls()
             s.ehlo()
-            # login for smtplib server (password is gmail app password SEE INFO = https://support.google.com/accounts/answer/185833?hl=en)
-            s.login('CS361SoftwareEngineering@gmail.com','yoevauamcinrcxvs')
+            # login for smtplib server (password is gmail app password SEE INFO =
+            # https://support.google.com/accounts/answer/185833?hl=en)
+            s.login('CS361SoftwareEngineering@gmail.com', 'yoevauamcinrcxvs')
             # First argument is where the email is getting sent from. Second argument is where it is going
-            s.sendmail('CS361SoftwareEngineering','mallorylhuston@gmail.com',msg.as_string())
+            s.sendmail('CS361SoftwareEngineering', 'mallorylhuston@gmail.com', msg.as_string())
             s.quit()
-            emailBody.delete(1.0,END)
+            emailBody.delete(1.0, END)
             subjectMessage.delete(0, END)
-            messagebox.showinfo("Success","Email Successfully Sent")
+            messagebox.showinfo("Success", "Email Successfully Sent")
             return
 
-
-
-
     # Widgets added for email subject and email body
-    emailSubject = Label(frame,text = "Subject")
+    emailSubject = Label(frame, text="Subject")
     emailSubject.pack()
 
-    bodyTitle = Label(root,text = "Message")
+    bodyTitle = Label(root, text="Message")
     bodyTitle.pack()
 
-    subjectMessage = Entry(frame, width = 50)
+    subjectMessage = Entry(frame, width=50)
     subjectMessage.focus_set()
     subjectMessage.pack()
 
-    emailBody = Text(root, width = 60, height = 20,bg = "lightgray")
+    emailBody = Text(root, width=60, height=20, bg="lightgray")
     emailBody.pack()
-
 
     button_frame = Frame(root)
     button_frame.pack()
 
-
     # will call display text to send email
     submitButton = Button(
-                root,
-                text="Send Email",
-                command = display_text,
-                fg="black")
+        root,
+        text="Send Email",
+        command=display_text,
+        fg="black")
 
-    submitButton.pack( side = BOTTOM )
-
+    submitButton.pack(side=BOTTOM)
 
     root.mainloop()
 
