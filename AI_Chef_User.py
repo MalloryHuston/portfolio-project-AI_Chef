@@ -87,7 +87,7 @@ class User:
         # print recipes in order
         i = 1
         print("Recipes (meal): ")
-        for meal in self._data[list(self._data.keys())[pos]].items():
+        for meal, request in self._data[list(self._data.keys())[pos]].items():
             print(str(i) + ". " + meal)
 
             # screen break every 10 recipes
@@ -105,7 +105,7 @@ class User:
             i = 1
             # print list
             for meal, request in self._data[list(self._data.keys())[j]].items():
-                print("    " + meal)
+                print(f"     {meal}")
 
                 # screen break every 10 recipes
                 if i % 10 == 0:
@@ -119,14 +119,14 @@ class User:
 
         # print meal of recipe in order
         i = 1
-        for meal in self._data[list(self._data.keys())[pos]].items():
+        for meal, request in self._data[list(self._data.keys())[pos]].items():
             print("\nShowing recipe #" + str(i) + ".")
-            print("Recipe: " + meal)
+            print(f"Recipe: {meal}")
             input("Press any key to see next recipe...")
             i += 1
 
     def edit_recipe(self, lib, key, key_str, value):
-        """edit a recipe to the user's database at the given position"""
+        """edit a recipe in the given library at the given position"""
 
         # retype indices and save database and recipe keys to a list
         lib = int(lib) - 1
@@ -177,19 +177,19 @@ class User:
 
         # print library
         for lib, data in result.items():
-            print("Library name: " + lib)
+            print(f"Library name: {lib}")
             print("Recipes (meal): ")
 
             # print recipe and request if you wanted recipe cooked for tonight
             i = 1
             for meal, request in sorted(self._data.items()):
                 print("\nShowing recipe #" + str(i) + ".")
-                print("Meal: " + meal)
+                print(f"Meal: {meal}")
                 input("Press any key to see request from the AI...")
-                making_sure = input("\nWould you like me to make {meal} for you tonight? Y/N")
+                making_sure = input(f"Would you like me to make {meal} for you tonight? Y/N")
 
                 if making_sure.lower() == "y":
-                    print("Alright! Good choice! Here is your delicious {meal}!")
+                    print(f"Alright! Good choice! Here is your delicious {meal}!")
 
                 if making_sure.lower() == "n":
                     input("That is alright. Press any key to see next recipe...")
@@ -198,4 +198,3 @@ class User:
                 if i % 10 == 0:
                     input("\nPress any key to continue...\n")
                 i += 1
-                
