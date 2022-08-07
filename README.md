@@ -6,17 +6,28 @@ A food machine that cooks food for you whenever you enter any available recipe y
 
 Microservice has been completed by <a href="https://github.com/Jacob-Heinrich/email-microservice">Jacob Heinrich.</a>
 
-<b>REQUIREMENTS:</b>
+<h2>Requirements:</h2>
 
 ```
 pip install pathlib
 pip install pika
 pip install email
 ```
-<b>HOW TO RUN PROGRAM:</b>
+<h2>How to Run Program:</h2>
+<h3>Terminal 1</h3>
 
 ```
 python AI_Chef.py
+```
+<h3>Terminal 2</h3>
+
+```
+cd email-microservice
 python emailMicroservice.py
+```
+<h3>Terminal 3</h3>
+
+```
+cd email-microservice
 python send.py
 ```
