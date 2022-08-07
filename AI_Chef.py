@@ -115,16 +115,16 @@ def add_recipe_confirmation(user, pos):
     """gets and confirms recipe data for add recipe"""
     # prompt user for meal and request
     meal = input("\nPlease enter text for a simple recipe you love eating: ")
-    request = input("Sounds like a delicious meal! Let me process making {meal} real quick. Press any key to "
+    request = input(f"Sounds like a delicious meal! Let me process making {meal} real quick. Press any key to "
                     "continue...")
 
     # confirm recipe
     print("\nYou have entered the following meal: " + meal)
-    finalize = input("\nWould you like me to make this {meal} for you tonight? Y/N: ")
+    finalize = input(f"Would you like me to make this {meal} for you tonight? Y/N: ")
 
     # save recipe
     if finalize.lower() == "y":
-        print("Fabulous! Your {meal} is now ready!")
+        print(f"Fabulous! Your {meal} is now ready!")
         user.add_recipe(pos, meal, request)
 
     # do nothing
@@ -231,11 +231,12 @@ def edit_recipes_confirmation(user, lib):
     # get edit inputs for edit_recipe()
     key = input("\nEnter selection: ")
     meal = input("Enter meal: ")
+    request = print(f"That {meal} looks yummy!")
 
     confirm = input("You entered meal: " + meal + ".\nKeep edits? Y/N: ")
 
     if confirm.lower() == "y":
-        user.edit_recipe(lib, key, meal)
+        user.edit_recipe(lib, key, meal, request)
 
     else:
         "Edit will not be saved."
@@ -323,6 +324,10 @@ def edit_delete_menu(user):
         delete_all(user)
 
 
+def email_form(user):
+    """email site staff from account page"""
+
+
 def account(name, pwd):
     """account page routine"""
     # create user object with credentials
@@ -335,8 +340,9 @@ def account(name, pwd):
                               "\n1. View your recipes - cycles through each recipe in a library."
                               "\n2. Create new recipe or library - create and customize in just two steps!"
                               "\n3. Edit/delete your recipes - new!"
-                              "\n4. Logoff"
-                              "\n5. Help options"
+                              "\n4. Email us!"
+                              "\n5. Logoff"
+                              "\n6. Help options"
                               "\n-> ")
 
         # display recipe
@@ -351,8 +357,12 @@ def account(name, pwd):
         elif account_input == "3":
             edit_delete_menu(user)
 
+        # EMAIL US! (microservice)
+        elif user_input == "4":
+            email_staff(user)
+
         # save recipes and logoff
-        elif account_input == "4":
+        elif account_input == "5":
             user.save_recipes()
             break
 
