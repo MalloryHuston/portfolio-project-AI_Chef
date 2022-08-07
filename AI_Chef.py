@@ -6,126 +6,26 @@
 
 import json
 from pathlib import Path
-import os
+from AI_Chef_User import User
 
 
-class User:
-    """Represents a user, with credentials and recipes."""
-    # initialize data members
-    def __init__(self, name, pwd):
+# ---------------------------------------------------------------------------
+#
+# General use functionality
+#
+# ---------------------------------------------------------------------------
 
-        # open and read user's json file if it exists
-        data_file = Path(name + ".json")
-        if data_file.is_file():
-            # open file and load into data
-            with open(name + '.json', 'r') as in_file:
-                self._data = json.load(in_file)
+def print_divide():
+    """prints a screen divide"""
+    print("\n---------------------------------------------"
+          "\n")
 
-        # dictionary defaults to None
-        else:
-            self._data = {}
 
-        # save user details
-        self._name = name
-        self._pwd = pwd
-        self._cred = {name: pwd}
-
-        # check if credential file exists
-        cred_file = Path(name + ".txt")
-        if cred_file.is_file() is False:
-            # create credentials file if it did not exist
-            with open(name + ".txt", 'w') as file:
-                file.write(json.dumps(self._cred))
-
-    def valid_index(self, pos):
-        """check if the given index falls within the dictionary"""
-        pos = int(pos) - 1
-        if 0 <= pos < len(self._data):
-            return True
-        else:
-            return False
-
-    def add_recipe(self, pos, recipe, request):
-        """adds a recipe entry to given collection in user._data"""
-        pos = int(pos) - 1
-
-        # creates directory if no recipes
-        if self._data == {}:
-            self._data = {list(self._data.keys())[pos]: {recipe: request}}
-
-        # adds recipe to directory
-        else:
-            self._data[list(self._data.keys())[pos]][recipe] = request
-
-    def add_coll(self, coll):
-        """adds an empty collection to self._data"""
-        self._data[coll] = {}
-
-    def show_coll(self):
-        """prints a numbered list of all collections"""
-        i = 1
-        # print list
-        for meal, request in self._data.items():
-            print(str(i) + ". " + meal)
-
-            # screen break every 10 recipes
-            if i % 10 == 0:
-                input("\nPress any key to continue...\n")
-
-            i += 1
-
-    def show_recipes(self):
-        """prints a numbered list of recipes"""
-        i = 1
-        # print list
-        for meal in sorted(self._data.items()):
-            print(str(i) + ". " + meal)
-
-            # screen break every 10 recipes
-            if i % 10 == 0:
-                input("\nPress any key to continue...\n")
-
-            i += 1
-
-    def print_recipe(self):
-        """prints recipes in self._data"""
-        # print recipe and question if you wanted recipe cooked for tonight
-        i = 1
-        for meal, request in sorted(self._data.items()):
-            print("\nShowing recipe #" + str(i) + ".")
-            print("Meal: " + meal)
-            input("Press any key to see request from the AI...")
-            making_sure = input("\nWould you like me to make {meal} for you tonight? Y/N")
-
-            if making_sure.lower() == "y":
-                print("Alright! Good choice! Here is your delicious {meal}!")
-                
-            if making_sure.lower() == "n":
-                input("That is alright. Press any key to see next recipe...")
-
-            i += 1
-
-    def save_recipes(self):
-        """saves self._data contents as a json to same directory"""
-        with open(self._name + '.json', 'w') as out_file:
-            out_file.write(json.dumps(self._data))
-
-    def delete(self):
-        """deletes recipes from self._data and from hard drive"""
-        # delete data
-        self._data = {}
-        # delete file if it exists
-        data_file = Path(self._name + ".json")
-        if data_file.is_file():
-            os.remove(self._name + '.json')
-
-    def no_recipes(self):
-        """returns true if user has no recipes, otherwise false"""
-        if self._data == {}:
-            return True
-        else:
-            return False
-        
+# ---------------------------------------------------------------------------
+#
+# Login page functionality
+#
+# ---------------------------------------------------------------------------
 
 def authenticate(name, pwd):
     """checks username/pwd against existing credentials"""
@@ -143,10 +43,19 @@ def authenticate(name, pwd):
     return False
 
 
-def print_divide():
-    """prints a screen divide"""
-    print("\n---------------------------------------------"
-          "\n")
+def credential_input():
+    """receives login input and logs user in"""
+    name = input("\nUsername -> ")
+    pwd = input("Password -> ")
+
+    # authenticate input and access account
+    if authenticate(name, pwd) is True:
+        print("\nSuccess! Opening your account, " + name + ".")
+        account(name, pwd)
+
+    else:
+        print("\nLogin failed. Please enter a valid Username and password.")
+        return
 
 
 def login():
@@ -161,26 +70,13 @@ def login():
 
         # attempt login
         if login_input == "1":
-            name = input("\nUsername -> ")
-            pwd = input("Password -> ")
-
-            # authenticate input
-            if authenticate(name, pwd) is True:
-                # access account
-                print("\nSuccess! Opening your account, " + name + ".")
-                account(name, pwd)
-
-            else:
-                # retry
-                print("\nLogin failed. Please enter a valid Username and password.")
-                continue
+            credential_input()
 
             # if return from successful account login, exit login loop
             break
 
         # return to previous screen
         if login_input == "2":
-            # go back to main screen
             print("\nReturning to previous screen.")
             return
 
@@ -188,6 +84,243 @@ def login():
         else:
             print("Error! Please enter a valid input.")
             continue
+
+
+# ---------------------------------------------------------------------------
+#
+# Account page functionality
+#
+# ---------------------------------------------------------------------------
+
+def add_library(user):
+    """add collection to create recipe"""
+    lib_name = input("\nEnter recipe library name: ")
+
+    # confirm library
+    print("\nYou have entered: " + lib_name)
+    finalize = input("\nSave this collection? Y/N: ")
+
+    # save library
+    if finalize.lower() == "y":
+        user.add_library(lib_name)
+        input("Collection added! Press any key to return...")
+
+    # do nothing
+    elif finalize.lower() == "n":
+        print("Library not saved.")
+        return
+
+
+def add_recipe_confirmation(user, pos):
+    """gets and confirms recipe data for add recipe"""
+    # prompt user for meal and request
+    meal = input("\nPlease enter text for a simple recipe you love eating: ")
+    request = input("Sounds like a delicious meal! Let me process making {meal} real quick. Press any key to "
+                    "continue...")
+
+    # confirm recipe
+    print("\nYou have entered the following meal: " + meal)
+    finalize = input("\nWould you like me to make this {meal} for you tonight? Y/N: ")
+
+    # save recipe
+    if finalize.lower() == "y":
+        print("Fabulous! Your {meal} is now ready!")
+        user.add_recipe(pos, meal, request)
+
+    # do nothing
+    elif finalize.lower() == "n":
+        print("Understood. No hard feelings!")
+        confirmation = input("\nWould you still like me to save this recipe for you anyway? WARNING: Any "
+                             "unsaved changes will be lost. Y/N: ")
+
+        if confirmation.lower() == "y":
+            print("Recipe saved!")
+            user.add_recipe(pos, meal, request)
+
+        if confirmation.lower() == "n":
+            print("Recipe not saved.")
+            return
+
+    else:
+        print("Invalid entry. Press any key to return to account...")
+
+
+def add_recipe(user):
+    """adds a new recipe to a library for create recipe"""
+    if user.no_recipes():
+        print("\nYou have no libraries of recipes! Make a library first.")
+        return
+
+    else:
+        print("\nYour libraries: ")
+        user.show_library()
+        pos = input("\nSelect a library to add the recipe to: ")
+
+        # if user entry is valid, proceed to recipe creation
+        if pos.isdigit() and user.valid_index(pos):
+            add_recipe_confirmation(user, pos)
+
+        # invalid pos input
+        else:
+            input("Invalid entry. Press any key to return to account...")
+
+
+def create_recipe(user):
+    """recipe creation routine: prompts user to create and add recipes to collections."""
+    print_divide()
+    # create recipe routine
+    while True:
+        recipe_input = input("\nWelcome to recipe creation! Please select an option: "
+                             "\n1. Create new library - start here!"
+                             "\n2. Add recipe to library"
+                             "\n3. Return to previous screen"
+                             "\n-> ")
+        # new collection
+        if recipe_input == "1":
+            add_library(user)
+
+        # new recipe
+        elif recipe_input == "2":
+            add_recipe(user)
+
+        # return to previous screen
+        elif recipe_input == "3":
+            break
+
+        else:
+            input("\nInvalid input! Press any key to return...")
+            continue
+
+
+def display_recipes_review(user):
+    """recipe reviewing function for display recipes"""
+    print("\nShowing a list of all your saved recipes: ")
+    user.show_all()
+
+    pos = input("\nEnter the number of the library you wish to browse: ")
+
+    # if valid entry, browse recipes for the given library
+    if pos.isdigit() and user.valid_index(pos):
+        user.review_recipes(pos)
+
+    # otherwise return to account
+    else:
+        input("Invalid entry! Press any key to return to account...")
+        return
+
+
+def display_recipes(user):
+    """display recipes from edit/delete menu"""
+    # check for recipes
+    if user.no_recipes():
+        print("\nYou currently have no recipes to view! Please make a new recipe from your account menu.")
+        input("Press any key to return to the previous screen...")
+
+    # show user's recipes
+    else:
+        display_recipes_review(user)
+
+        input("\nNo more recipes to show. Press any key to return to account...")
+
+
+def edit_recipes_confirmation(user, lib):
+    """selects and confirms edits for a recipe in a library of edit recipes"""
+    print("\nSelect recipe to edit:")
+    user.show_recipes(lib)
+
+    # get edit inputs for edit_recipe()
+    key = input("\nEnter selection: ")
+    meal = input("Enter meal: ")
+
+    confirm = input("You entered meal: " + meal + ".\nKeep edits? Y/N: ")
+
+    if confirm.lower() == "y":
+        user.edit_recipe(lib, key, meal)
+
+    else:
+        "Edit will not be saved."
+
+
+def edit_recipes(user):
+    """edit recipe option from edit/delete menu"""
+    print("\nSelect a library:")
+    user.show_library()
+
+    lib = input("\nEnter selection: ")
+
+    # get recipe to edit
+    if user.valid_index(lib):
+        edit_recipes_confirmation(user, lib)
+
+    else:
+        print("Invalid entry!")
+
+
+def delete_one_confirmation(user, lib):
+    """confirms and deletes one recipe for delete one"""
+    print("\nSelect recipe to delete:")
+    user.show_recipes(lib)
+
+    key = input("\nEnter selection: ")
+    confirm = input("Delete this recipe? Y/N: ")
+
+    # delete recipe
+    if confirm.lower() == "y":
+        user.delete_recipe(lib, key)
+
+    else:
+        "No changes made."
+
+
+def delete_one(user):
+    """delete one recipe from edit/delete menu"""
+    print("\nSelect a library:")
+    user.show_library()
+
+    lib = input("\nEnter selection: ")
+
+    # get recipe to delete
+    if user.valid_index(lib):
+        delete_one_confirmation(user, lib)
+
+    else:
+        print("Invalid entry!")
+
+
+def delete_all(user):
+    """delete all recipes from edit/delete menu"""
+    delete = input("Delete your recipe(s)? Y/N: ")
+
+    # delete all recipes in user object and hdd recipe file associated with user credentials
+    if delete.lower() == "y":
+        print("Recipes deleted!")
+        user.delete_all()
+
+    elif delete.lower() == "n":
+        print("Recipes will not be deleted.")
+
+    else:
+        print("Invalid entry. Returning to account.")
+
+
+def edit_delete_menu(user):
+    """edit/delete menu selection from account"""
+    edit_input = input("\nSelect an option below:"
+                       "\n1. Edit a recipe"
+                       "\n2. Delete a recipe"
+                       "\n3. Delete ALL recipes"
+                       "\n-> ")
+    # edit a recipe
+    if edit_input == "1":
+        edit_recipes(user)
+
+    # delete one recipe
+    elif edit_input == "2":
+        delete_one(user)
+
+    # delete ALL
+    elif edit_input == "3":
+        delete_all(user)
 
 
 def account(name, pwd):
@@ -199,87 +332,28 @@ def account(name, pwd):
         print_divide()
         # prompt user
         account_input = input("Welcome to your AI Chef account! Please enter the number of an option below:"
-                              "\n1. View your recipes"
-                              "\n2. Create new recipe - customizable in just two steps!"
-                              "\n3. Delete your recipes"
+                              "\n1. View your recipes - cycles through each recipe in a library."
+                              "\n2. Create new recipe or library - create and customize in just two steps!"
+                              "\n3. Edit/delete your recipes - new!"
                               "\n4. Logoff"
                               "\n5. Help options"
                               "\n-> ")
 
         # display recipe
         if account_input == "1":
-            # if user has no saved recipes, notify and return to menu
-            if user.no_recipes():
-                print("\nYou currently have no recipes to view! Please make a new recipe from your account menu.")
-                input("Press any key to return to the previous screen...")
-
-            # show user's recipes
-            else:
-                print("\nShowing a list of all of your recipes: ")
-                # print list
-                user.show_recipes
-                # iterate through each recipe
-                user.print_recipe()
-
-                # notify user end of list has been reached
-                input("\nNo more recipes to show. Press any key to return to account...")
+            display_recipes(user)
 
         # create recipe
         elif account_input == "2":
-            # prompt user for meal and request
-            meal = input("\nPlease enter text for a simple recipe you love eating: ")
-            request = input("Sounds like a delicious meal! Let me process making {meal} real quick. Press any key to "
-                            "continue...")
+            create_recipe(user)
 
-            # confirm recipe
-            print("\nYou have entered the following meal: " + meal )
-            finalize = input("\nWould you like me to make this {meal} for you tonight? Y/N: ")
-
-            # save recipe
-            if finalize.lower() == "y":
-                print("Fabulous! Your {meal} is now ready!")
-                user.add_recipe(meal, request)
-
-            # do nothing
-            elif finalize.lower() == "n":
-                print("Understood. No hard feelings!")
-                confirmation = input("\nWould you still like me to save this recipe for you anyway? WARNING: Any "
-                                     "unsaved changes will be lost. Y/N: ")
-
-                if confirmation.lower() == "y":
-                    print("Recipe saved!")
-                    user.add_recipe(meal, request)
-
-                if confirmation.lower() == "n":
-                    print("Recipe not saved.")
-                    continue
-
-            else:
-                print("Invalid entry. Returning to account.")
-
-        # delete ALL recipes
+        # edit/delete
         elif account_input == "3":
-            # confirm choice to delete
-            delete = input("Delete your recipe(s)? Y/N: ")
+            edit_delete_menu(user)
 
-            # delete all recipes in user object and hdd recipe file associated with user credentials
-            if delete.lower() == "y":
-                print("Recipes deleted!")
-                user.delete()
-
-            # do nothing
-            elif delete.lower() == "n":
-                print("Recipes will not be deleted.")
-                continue
-
-            else:
-                print("Invalid entry. Returning to account.")
-
-        # logoff user
+        # save recipes and logoff
         elif account_input == "4":
-            # first, save data to hdd
             user.save_recipes()
-            # return to previous menu
             break
 
         # help menu/invalid entry
@@ -289,6 +363,42 @@ def account(name, pwd):
             print("Any other key entry will bring you to the help menu.")
             input("To return to your account page, press any key...")
             continue
+
+
+# ---------------------------------------------------------------------------
+#
+# Create new account page functionality
+#
+# ---------------------------------------------------------------------------
+
+def user_name_select():
+    """username and password selection for create account"""
+    while True:
+        user_name = input("\nEnter your new user name: ")
+
+        # check if credential file exists
+        cred_file = Path(user_name + ".txt")
+        if cred_file.is_file():
+            print("Error! That user name already exists. Please enter a new choice.")
+            exit_create = input("Or type Q to return to the previous screen: ")
+
+            # return to account creation screen
+            if exit_create.lower() == "q":
+                return
+
+            else:
+                continue
+
+        # create new credentials
+        else:
+            user_pwd = input("Please enter a new password: ")
+
+            print("\nAccount creation successful!")
+            input("Logging into your account. Press any key to continue...")
+
+            # log user into account
+            account(user_name, user_pwd)
+        return
 
 
 def create_account():
@@ -302,45 +412,9 @@ def create_account():
                              "\n3. Help options"
                              "\n-> ")
 
-        # display recipe
         if create_input == "1":
-
-            # prompt user for username and password
-            while True:
-                # get username
-                user_name = input("\nEnter your new user name: ")
-                # check if credential file exists
-                cred_file = Path(user_name + ".txt")
-                if cred_file.is_file():
-                    # print error message
-                    print("Error! That user name already exists. Please enter a new choice.")
-                    exit_create = input("Or type Q to return to the previous screen: ")
-
-                    # return to account creation screen
-                    if exit_create.lower() == "q":
-                        break
-
-                    else:
-                        continue
-
-                # get user password
-                else:
-                    user_pwd = input("Please enter a new password: ")
-
-                    # create new user object with input
-                    user = User(user_name, user_pwd)
-
-                    # print success notification
-                    print("\nAccount creation successful!")
-                    input("Logging into your account. Press any key to continue...")
-
-                    # log user into account
-                    account(user_name, user_pwd)
-
-                # exit function
-                # user will only reach this point after successfully creating a new account,
-                # logging in, then logging out
-                return
+            user_name_select()
+            return
 
         # return to previous screen
         elif create_input == "2":
