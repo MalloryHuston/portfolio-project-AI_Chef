@@ -8,4 +8,5 @@ channel = connection.channel()
 channel.queue_declare(queue='email')
 
 channel.basic_publish(exchange='', routing_key='email', body='yes')
+print(" [x] Sent email successfully!")
 connection.close()
