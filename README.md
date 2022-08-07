@@ -13,3 +13,10 @@ pip install pathlib
 pip install pika
 pip install email
 ```
+<b>How to Run Program</b>
+
+```
+python AI_Chef.py
+python emailMicroservice.py
+python send.py
+```
