@@ -1,4 +1,4 @@
-import pika
+import pika, sys, os
 from tkinter import *
 from tkinter import messagebox
 import smtplib
@@ -28,6 +28,17 @@ def communication():
 
     print(' [*] Waiting for messages. To exit press CTRL+C')
     channel.start_consuming()
+
+
+if __name__ == '__main__':
+    try:
+        communication()
+    except KeyboardInterrupt:
+        print('Interrupted')
+        try:
+            sys.exit(0)
+        except SystemExit:
+            os._exit(0)
 
 
 def email():
