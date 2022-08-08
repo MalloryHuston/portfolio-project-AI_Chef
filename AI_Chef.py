@@ -203,11 +203,18 @@ def display_recipes_review(user):
     if pos.isdigit() and user.valid_index(pos):
         user.review_recipes(pos)
 
-        finalize = input(f"Would you like me this wonderful dinner for you tonight? Y/N: ")
+        finalize = input("Would you like me to make a wonderful dinner for you tonight? Y/N: ")
 
         # cook recipe
         if finalize.lower() == "y":
-            print(f"Fabulous! Your dinner is now ready!")
+            user.show_recipes(pos)
+            lib = input("\nGreat! Which recipe # do you want me to cook? ")
+
+            if user.valid_index(lib):
+                print(f"Fabulous! Recipe #{lib} is now ready!")
+
+            else:
+                print("Invalid entry!")
 
         # hold off on recipe for now
         if finalize.lower() == "n":
@@ -243,7 +250,7 @@ def edit_recipes_confirmation(user, lib):
     meal = input("Enter meal: ")
     request = print(f"That {meal} looks yummy!")
 
-    confirm = input("You entered meal: " + meal + ".\nKeep edits? Y/N: ")
+    confirm = input("You entered meal: " + meal + ".\nKeep changes? Y/N: ")
 
     if confirm.lower() == "y":
         user.edit_recipe(lib, key, meal, request)
