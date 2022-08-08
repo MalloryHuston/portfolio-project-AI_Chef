@@ -263,7 +263,7 @@ def delete_one_confirmation(user, lib):
     user.show_recipes(lib)
 
     key = input("\nEnter selection: ")
-    confirm = input("Delete this recipe? Y/N: ")
+    confirm = input("Are you sure you want to delete this recipe? Y/N: ")
 
     # delete recipe
     if confirm.lower() == "y":
@@ -290,7 +290,7 @@ def delete_one(user):
 
 def delete_all(user):
     """delete all recipes from edit/delete menu"""
-    delete = input("Delete your recipe(s)? Y/N: ")
+    delete = input("ARE YOU SURE you want to delete all your recipe(s)? Y/N: ")
 
     # delete all recipes in user object and hdd recipe file associated with user credentials
     if delete.lower() == "y":
