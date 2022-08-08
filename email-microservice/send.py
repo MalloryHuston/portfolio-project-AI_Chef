@@ -12,5 +12,5 @@ channel.basic_publish(exchange='',
                       body='yes'
                       )
 
-print(" [x] Sent email successfully!")
+print(" [x] Email has been sent successfully!")
 connection.close()
