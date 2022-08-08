@@ -25,6 +25,7 @@ def communication():
 
         print(" [x] Received %r" % body)
 
+
     channel.basic_consume(queue='email',
                           on_message_callback=callback,
                           auto_ack=True)
