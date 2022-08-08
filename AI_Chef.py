@@ -203,7 +203,7 @@ def display_recipes_review(user):
     if pos.isdigit() and user.valid_index(pos):
         user.review_recipes(pos)
 
-        finalize = input("Would you like me to make a wonderful dinner for you tonight? Y/N: ")
+        finalize = input("Would you like me to make a wonderful meal for you later? Y/N: ")
 
         # cook recipe
         if finalize.lower() == "y":
