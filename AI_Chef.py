@@ -324,10 +324,6 @@ def edit_delete_menu(user):
         delete_all(user)
 
 
-def email_form(user):
-    """email site staff from account page"""
-
-
 def account(name, pwd):
     """account page routine"""
     # create user object with credentials
@@ -340,7 +336,6 @@ def account(name, pwd):
                               "\n1. View your recipes - cycles through each recipe in a library."
                               "\n2. Create new recipe or library - create and customize in just two steps!"
                               "\n3. Edit/delete your recipes - new!"
-                              "\n4. Email us!"
                               "\n5. Logoff"
                               "\n6. Help options"
                               "\n-> ")
@@ -356,10 +351,6 @@ def account(name, pwd):
         # edit/delete
         elif account_input == "3":
             edit_delete_menu(user)
-
-        # EMAIL US! (microservice)
-        elif user_input == "4":
-            email_staff(user)
 
         # save recipes and logoff
         elif account_input == "5":
